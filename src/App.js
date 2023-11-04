@@ -10,9 +10,9 @@ class App extends Component {
     bad: 0,
   };
 
-  onLeaveFeedback = e => {
+  onLeaveFeedback = (e) => {
     const currentBtnValue = e.currentTarget.value;
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       ...prevState,
       [currentBtnValue]: prevState[currentBtnValue] + 1,
     }));
@@ -25,23 +25,15 @@ class App extends Component {
       return acc;
     });
   };
-  countZero = () => {
-    if (
-      this.state.good === 0 &&
-      this.state.neutral === 0 &&
-      this.state.bad === 0
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+
   countPositiveFeedbackPercentage = () => {
     return Math.trunc((this.state.good / this.countTotalFeedback()) * 100);
   };
 
   render() {
     const btnNames = Object.keys(this.state);
+    const totalFeedback = this.countTotalFeedback();
+
     return (
       <div className="App">
         <section>
@@ -49,14 +41,14 @@ class App extends Component {
             options={btnNames}
             onLeaveFeedback={this.onLeaveFeedback}
           />
-          {this.countZero() ? (
-            <Notification message="No feedback given" />
-          ) : (
+          {totalFeedback > 0 ? (
             <Statistics
               stat={this.state}
-              total={this.countTotalFeedback()}
+              total={totalFeedback}
               positivePercentage={this.countPositiveFeedbackPercentage()}
             />
+          ) : (
+            <Notification message="No feedback given" />
           )}
         </section>
       </div>
